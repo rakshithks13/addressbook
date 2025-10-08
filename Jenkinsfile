@@ -1,20 +1,35 @@
 pipeline {
     agent any
+
     stages {
-        stage('Compile') {
-            steps { 
-                sh 'mvn compile'
+        stage('job') {
+            steps {
+                echo 'Building the first pipeline job'
+                git 'https://github.com/rakshithks13/addressbook.git'
             }
         }
-        stage('test') {
-            steps { 
-                sh 'mvn test'
+            stage('Build') {
+            steps {
+                echo 'Build'
+                sh '''mvn compile
+'''
+            }
+            }
+            stage('Test') {
+            steps {
+                echo 'Test'
+                sh '''mvn test
+'''
             }
         }
-        stage('package') {
-            steps { 
-                sh 'mvn package'
+        stage('Install') {
+            steps {
+                echo 'Install'
+                sh '''mvn clean install
+'''
+        archiveArtifacts artifacts: 'Dockerfile', followSymlinks: false
             }
-        }
+            }
+        
     }
 }
